@@ -7,17 +7,31 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * A class that serves as interface for volunteers to log hours.
+ */
 public class VolunteerLog {
 
     private static final String FILE_NAME = "VolunteerLog.csv";
     private static final Map<String, Volunteer> volunteers = new HashMap<>();
     private static final DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Name", "Email", "Phone", "Total Hours"}, 0);
 
+    /**
+     * Serves as the entry point of the Volunteer Log application.
+     * Loads the volunteer data from the file and displays a GUI for the client.
+     * 
+     * @param args Command-line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         loadVolunteersFromFile();
         SwingUtilities.invokeLater(VolunteerLog::createAndShowGUI);
     }
 
+
+    /**
+     * Initializes necessary features for graphical user interface.
+     * Adds interactive buttons and table with all volunteers.
+     */
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("Volunteer Log");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +68,10 @@ public class VolunteerLog {
         frame.setVisible(true);
     }
 
+    /**
+     * Initializes text fields to store volunteer information.
+     * Adds information to spreadsheet.
+     */
     private static void registerVolunteer() {
         JTextField nameField = new JTextField();
         JTextField emailField = new JTextField();
@@ -81,6 +99,10 @@ public class VolunteerLog {
         }
     }
 
+    /**
+     * Requests the user's email to check if information is already in system.
+     * If it is, adds to their hours. If it isn't, program throws an error.
+     */
     private static void logHours() {
         String email = JOptionPane.showInputDialog(null, "Enter volunteer's email:", "Log Hours", JOptionPane.PLAIN_MESSAGE);
         if (email == null || email.isEmpty()) {
@@ -116,6 +138,9 @@ public class VolunteerLog {
         }
     }
 
+    /**
+     * Updates the table to include most recent entry.
+     */
     private static void updateTable() {
         tableModel.setRowCount(0); // Clear existing data
         for (Volunteer volunteer : volunteers.values()) {
@@ -123,6 +148,9 @@ public class VolunteerLog {
         }
     }
 
+    /**
+     * Retrieves volunteer information from CSV file.
+     */
     private static void loadVolunteersFromFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
@@ -160,13 +188,21 @@ public class VolunteerLog {
         }
     }
 
-    // Volunteer class
+    /**
+     * A class that imitates a volunteer at Lopez Urban Farm.
+     */
     static class Volunteer {
         private final String name;
         private final String email;
         private final String phone;
         private long totalHours;
 
+        /**
+         * Constructor for a new volunteer.
+         * @param name      Volunteer's name (first and last).
+         * @param email     Volunteer's email (used to identify them when logging hours).
+         * @param phone     Volunteer's phone number (recorded for messaging purposes).
+         */
         public Volunteer(String name, String email, String phone) {
             this.name = name;
             this.email = email;
@@ -174,6 +210,13 @@ public class VolunteerLog {
             this.totalHours = 0;
         }
 
+        /**
+         * Constructor for a volunteer with already-existing hours.
+         * @param name      Volunteer's name (first and last).
+         * @param email     Volunteer's email (used to identify them when logging hours).
+         * @param phone     Volunteer's phone number (recorded for messaging purposes).
+         * @param hours     Volunteer's logged hours.
+         */
         public Volunteer(String name, String email, String phone, long hours) {
             this.name = name;
             this.email = email;
@@ -181,26 +224,50 @@ public class VolunteerLog {
             this.totalHours = hours;
         }
 
+        /**
+         * Returns the name of the volunteer.
+         * @return  Volunteer's name (first and last).
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Returns the email of the volunteer.
+         * @return  Volunteer's email.
+         */
         public String getEmail() {
             return email;
         }
 
+        /**
+         * Returns the phone number of the volunteer.
+         * @return  Volunteer's phone number.
+         */
         public String getPhone() {
             return phone;
         }
 
+        /**
+         * Returns the total hours worked by the volunteer.
+         * @return  Volunteer's total hours.
+         */
         public long getTotalHours() {
             return totalHours;
         }
 
+        /**
+         * Adds a number of hours to the volunteer's hour log.
+         * @param hours Number of hours to be added.
+         */
         public void addHours(long hours) {
             this.totalHours += hours;
         }
 
+        /**
+         * Converts volunteer's information into readable format in CSV file.
+         * @return  String with all volunteer's information in simple format.
+         */
         public String toCSV() {
             return name + ", " + email + ", " + phone + ", " + totalHours;
         }
